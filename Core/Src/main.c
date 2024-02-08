@@ -90,6 +90,20 @@ uint16_t CH[18];
 int lenght=0;
 uint16_t USB_Send_Data[]={0};
 uint16_t count_1=0, count_2=0, count_3=0, count_4=0;
+
+/*
+FORWARD: TIM3
+right front: TIM3_CH2 -> PA7. EN: PC6
+left front: TIM3_CH1  -> PA6. EN: PC7
+right back: TIM3_CH4 -> PB1. EN: PC8
+left back: TIM3_CH3 -> PB0. EN: PC9
+BACKWARD: TIM4
+right front: TIM4_CH2 -> PD13. EN: PD1
+left front: TIM4_CH1 -> PD12. EN: PD2
+right back: TIM4_CH4 -> PD15. EN: PD3
+left back: TIM4_CH3 -> PD14. EN: PD4
+*/
+
 /* USER CODE END 0 */
 
 /**
@@ -126,6 +140,13 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 //  HAL_UART_Receive_DMA(&huart2, buf, 25);
+
+  while(1) {
+	  forward_drive(75);
+  }
+
+
+
   while(1) {
 //	  count++;
 	  if (HAL_UART_Receive(&huart2, buf, 25, 100) == HAL_OK) {
@@ -187,7 +208,7 @@ void SystemClock_Config(void)
   * in the RCC_OscInitTypeDef structure.
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
