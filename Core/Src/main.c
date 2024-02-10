@@ -76,6 +76,7 @@ static void backward_drive(uint32_t rate);
 static void left_drive(uint32_t rate);
 static void right_drive(uint32_t rate);
 static void hold_drive();
+static void test_drive();
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
 int16_t mapSBUSValue(int16_t sbusValue, int16_t sbusMin, int16_t sbusMax, int16_t minValue, int16_t maxValue);
 void controlCarThrottle();
@@ -139,13 +140,23 @@ int main(void)
   MX_CRC_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-//  HAL_UART_Receive_DMA(&huart2, buf, 25);
+  HAL_UART_Receive_DMA(&huart2, buf, 25);
 
+  while (!(GPIOA->IDR & (1 << 0)));
+  GPIOC->ODR |= (1 << 15);
+  while (GPIOA->IDR & (1 << 0));
+  GPIOD->ODR |= 1<<1 | 1<<2 | 1<<3 | 1<<4;
+  GPIOC->ODR |= 1<<6 | 1<<7 | 1<<8 | 1<<9;
   while(1) {
-	  forward_drive(75);
+	  test_drive();
+	  if(GPIOA->IDR & 1<<0) {
+		  GPIOC->ODR &= ~(1<<15);
+		  GPIOC->ODR |= 1<<14;
+		  break;
+	  }
   }
 
-
+  while(1);
 
   while(1) {
 //	  count++;
@@ -381,6 +392,25 @@ void controlCarSteering() {
     		// nothing
     	}
     }
+}
+
+static void test_drive() {
+	for(int i = 0; i < 100; i ++) {
+		forward_drive(i);
+		HAL_Delay(100);
+	}
+	for(int i = 100; i > 0; i --) {
+		forward_drive(i);
+		HAL_Delay(100);
+	}
+	for(int i = 0; i < 100; i ++) {
+		backward_drive(i);
+		HAL_Delay(100);
+	}
+	for(int i = 100; i > 0; i --) {
+		backward_drive(i);
+		HAL_Delay(100);
+	}
 }
 /* USER CODE END 4 */
 
