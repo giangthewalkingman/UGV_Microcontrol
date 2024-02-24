@@ -9,5 +9,5 @@
 ../Core/Src/main.c:376:9:mapSBUSValue	1
 ../Core/Src/main.c:380:6:controlCarThrottle	5
 ../Core/Src/main.c:394:6:controlCarSteering	5
-../Core/Src/main.c:407:13:test_drive	5
+../Core/Src/main.c:407:13:test_drive	2
 ../Core/Src/main.c:431:6:Error_Handler	1

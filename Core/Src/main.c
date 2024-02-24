@@ -144,7 +144,7 @@ int main(void)
 
   //Press blue button to start the test drive
   GPIOC->ODR &= ~(1<<6 | 1<<7 | 1<<8 | 1<<9);
-  GPIOD->ODR &= ~(1<<1 | 1<<2 | 1<<3 | 1<<4);
+  GPIOD->ODR &= ~(1<<2 | 1<<3 | 1<<4 | 1<<5);
   while (!(GPIOA->IDR & (1 << 0)));
   GPIOC->ODR |= (1 << 1);
   while (GPIOA->IDR & (1 << 0));
@@ -240,7 +240,7 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 static void forward_drive(uint32_t rate) {
 	GPIOC->ODR |= 1<<6 | 1<<7 | 1<<8 | 1<<9;
-	GPIOD->ODR &= ~(1<<1 | 1<<2 | 1<<3 | 1<<4);
+	GPIOD->ODR &= ~(1<<5 | 1<<2 | 1<<3 | 1<<4);
 	TIM3->CCR1 = rate;
 	TIM3->CCR2 = rate;
 	TIM3->CCR3 = rate;
@@ -257,7 +257,7 @@ static void forward_drive(uint32_t rate) {
 
 static void backward_drive(uint32_t rate) {
 	GPIOC->ODR &= ~(1<<6 | 1<<7 | 1<<8 | 1<<9);
-	GPIOD->ODR |= 1<<1 | 1<<2 | 1<<3 | 1<<4;
+	GPIOD->ODR |= 1<<5 | 1<<2 | 1<<3 | 1<<4;
 	TIM4->CCR1 = rate;
 	TIM4->CCR2 = rate;
 	TIM4->CCR3 = rate;
@@ -275,7 +275,7 @@ static void backward_drive(uint32_t rate) {
 static void left_drive(uint32_t rate) {
 	GPIOC->ODR &= ~(1<<7 | 1<<9);
 	GPIOC->ODR |= 1<<6 | 1<<8;
-	GPIOD->ODR &= ~(1<<1 | 1<<3);
+	GPIOD->ODR &= ~(1<<5 | 1<<3);
 	GPIOD->ODR |= 1<<2 | 1<<4;
 	TIM3->CCR2 = rate;
 	TIM3->CCR4 = rate;
@@ -295,7 +295,7 @@ static void right_drive(uint32_t rate) {
 	GPIOC->ODR &= ~(1<<6 | 1<<8);
 	GPIOC->ODR |= 1<<7 | 1<<9;
 	GPIOD->ODR &= ~(1<<2 | 1<<4);
-	GPIOD->ODR |= 1<<1 | 1<<3;
+	GPIOD->ODR |= 1<<5 | 1<<3;
 	TIM3->CCR1 = rate;
 	TIM3->CCR3 = rate;
 	TIM4->CCR2 = rate;
@@ -312,7 +312,7 @@ static void right_drive(uint32_t rate) {
 
 static void hold_drive() {
 	GPIOC->ODR &= ~(1<<6 | 1<<7 | 1<<8 | 1<<9);
-	GPIOD->ODR &= ~(1<<1 | 1<<2 | 1<<3 | 1<<4);
+	GPIOD->ODR &= ~(1<<5 | 1<<2 | 1<<3 | 1<<4);
 	HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_1);
 	HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_2);
 	HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_3);
@@ -406,21 +406,21 @@ void controlCarSteering() {
 
 static void test_drive() {
 	for(int i = 0; i < 100; i ++) {
-		forward_drive(i);
+		forward_drive(50);
 		HAL_Delay(100);
 	}
-	for(int i = 100; i > 0; i --) {
-		forward_drive(i);
-		HAL_Delay(100);
-	}
-	for(int i = 0; i < 100; i ++) {
-		backward_drive(i);
-		HAL_Delay(100);
-	}
-	for(int i = 100; i > 0; i --) {
-		backward_drive(i);
-		HAL_Delay(100);
-	}
+//	for(int i = 100; i > 0; i --) {
+//		forward_drive(i);
+//		HAL_Delay(100);
+//	}
+//	for(int i = 0; i < 100; i ++) {
+//		backward_drive(i);
+//		HAL_Delay(100);
+//	}
+//	for(int i = 100; i > 0; i --) {
+//		backward_drive(i);
+//		HAL_Delay(100);
+//	}
 }
 /* USER CODE END 4 */
 
